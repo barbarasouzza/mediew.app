@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="./logoMediew.png" />
+  <title>Mediew | Acesso antecipado</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+    :root {
+      color-scheme: dark;
+      --font-display: "Space Grotesk", "Inter", sans-serif;
+      --font-body: "Inter", "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+      --bg: #031432;
+      --surface: #0321469a;
+      --surface-2: #04426044;
+
+      --text: #f4fbff;
+      --muted: #95b5c8;
+      --action: #1bacac;
+      --action-soft: #61d1d1da;
+      --action-surface: rgba(34, 189, 189, 0.16);
+      --action-surface-strong: rgba(34, 189, 189, 0.26);
+
+      --card-bg: #0321463f;
+      --card-border: rgba(103, 161, 188, 0.3);
+      --card-border-strong: rgba(112, 181, 207, 0.45);
+      --info-border: rgba(47, 143, 202, 0.4);
+      --info-surface: rgba(47, 143, 202, 0.16);
+      --success-border: rgba(57, 201, 181, 0.4);
+      --success-surface: rgba(57, 201, 181, 0.16);
+      --success-ink: #e6fff8;
+      --danger-border: rgba(255, 125, 125, 0.3);
+      --danger-surface: rgba(107, 19, 19, 0.5);
+      --danger-ink: #ffd6d6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+      color: inherit;
+    }
+
+    .layout {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      isolation: isolate;
+      overflow-x: clip;
+    }
+
+    .layout > *:not(.mediew-bg) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .mediew-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .mediew-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--surface-2);
+    }
+
+    .mediew-bg__blob {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(70px);
+      z-index: 1;
+      animation: blob-float 12s ease-in-out infinite;
+    }
+
+    .mediew-bg__vignette {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 180px;
+      z-index: 1;
+      background: var(--surface-2);
+    }
+
+    .mediew-bg__vignette--left {
+      left: 0;
+    }
+
+    .mediew-bg__vignette--right {
+      right: 0;
+    }
+
+    .menu-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 24px auto;
+      position: relative;
+      border-radius: 30px;
+      overflow: hidden;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid rgba(168, 242, 224, 0.1);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+    }
+
+    .menu-shell-background {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .menu-shell-glow {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(85px);
+    }
+
+    .menu-shell-glow-left {
+      width: 320px;
+      height: 320px;
+      left: -120px;
+      top: 56px;
+      background: rgba(0, 206, 209, 0.24);
+    }
+
+    .menu-shell-glow-right {
+      width: 360px;
+      height: 360px;
+      right: -140px;
+      top: 120px;
+      background: rgba(0, 206, 209, 0.3);
+    }
+
+    .menu-shell-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background: var(--surface-2);
+      background-size: 42px 42px;
+      opacity: 0.35;
+    }
+
+    .menu-shell-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .page {
+      width: 100%;
+      display: grid;
+      gap: 18px;
+    }
+
+    .page.login {
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      background: var(--card-bg);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(12px);
+      padding: 20px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #bfdbfe;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      min-height: 360px;
+      padding-right: 220px;
+    }
+
+    .hero-logo {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: clamp(120px, 12vw, 170px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.26));
+      opacity: 0.96;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -62px;
+      bottom: -90px;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      border: 1px dashed rgba(168, 242, 224, 0.24);
+      opacity: 0.65;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3vw, 2.7rem);
+      line-height: 0.94;
+      color: #ffffff;
+      max-width: 12ch;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 56ch;
+      color: #c3d5e0;
+      line-height: 1.5;
+    }
+
+    .hero-highlights {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hero-highlights li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 500;
+      color: #dae7f4;
+    }
+
+    .hero-highlights li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--action);
+      box-shadow: 0 0 0 5px rgba(0, 206, 209, 0.14);
+      flex-shrink: 0;
+    }
+
+    .hero-visual {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .hero-mascot {
+      width: clamp(100px, 11vw, 136px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.32));
+    }
+
+    .hero-kpis {
+      flex: 1;
+      min-width: 180px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .hero-kpi {
+      padding: 9px 10px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      background: var(--surface-2);
+    }
+
+    .hero-kpi strong {
+      display: block;
+      font-size: 1.03rem;
+      line-height: 1;
+      color: #ffffff;
+    }
+
+    .hero-kpi span {
+      font-size: 0.76rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .launch-box {
+      border-radius: 16px;
+      border: 1px solid var(--info-border);
+      background: var(--info-surface);
+      padding: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e8f5ff;
+      border: 1px solid var(--info-border);
+      background: var(--info-surface);
+    }
+
+    .launch-price {
+      margin: 0;
+      font-size: 0.97rem;
+      color: #d7ecff;
+    }
+
+    .launch-price strong {
+      color: #ffffff;
+      font-size: 1.18rem;
+    }
+
+    .helper {
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .form-card {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+      align-content: center;
+      height: 100%;
+    }
+
+    .form-card h2 {
+      margin: 0;
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      line-height: 1.05;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: #d6ece8;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--surface);
+      color: #d9eaff;
+      padding: 10px 12px;
+      font-size: 0.94rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input::placeholder {
+      color: var(--muted);
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--action-soft);
+      box-shadow: 0 0 0 3px var(--action-surface);
+      outline: none;
+    }
+
+    button {
+      border: 1px solid var(--action);
+      border-radius: 13px;
+      padding: 11px 14px;
+      font-size: 0.91rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      background: var(--action-surface);
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(34, 189, 189, 0.18);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: var(--action-surface-strong);
+      border-color: var(--action-soft);
+      box-shadow: 0 10px 20px rgba(34, 189, 189, 0.22);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.62;
+      transform: none;
+    }
+
+    .status-banner {
+      border-radius: 16px;
+      padding: 11px 13px;
+      font-size: 0.9rem;
+      border: 1px solid var(--info-border);
+      background: var(--info-surface);
+      color: #e8f5ff;
+    }
+
+    .status-banner--success {
+      border-color: var(--success-border);
+      background: var(--success-surface);
+      color: var(--success-ink);
+    }
+
+    .status-banner--danger {
+      border-color: var(--danger-border);
+      background: var(--danger-surface);
+      color: var(--danger-ink);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .spark {
+      position: absolute;
+      bottom: 74px;
+      left: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      pointer-events: none;
+      opacity: 0;
+      animation: spark-fly 760ms ease-out forwards;
+    }
+
+    .footer-note {
+      margin: 2px 0 0;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #9ec4d4;
+    }
+
+    @media (max-width: 920px) {
+      .page.login {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero {
+        padding-right: 28px;
+      }
+
+      .hero-logo {
+        position: static;
+        width: clamp(108px, 28vw, 142px);
+      }
+
+      .hero-kpis {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .menu-shell-content {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .menu-shell {
+        width: calc(100% - 20px);
+        border-radius: 20px;
+        margin-bottom: 16px;
+      }
+
+      .menu-shell-content {
+        padding: 14px;
+        gap: 14px;
+      }
+
+      .card,
+      .hero {
+        border-radius: 18px;
+        padding: 14px;
+      }
+
+      .form-card {
+        padding: 14px;
+      }
+    }
+
+    @keyframes spark-fly {
+      10% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--x), var(--y)) scale(1.05);
+        opacity: 0;
+      }
+    }
+
+    @keyframes blob-float {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-14px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout layout--mediew">
+    <div class="mediew-bg" aria-hidden="true">
+      <div class="mediew-bg__blob" style="left:-90px;top:70px;width:230px;height:230px;background:rgba(0,206,209,.12)"></div>
+      <div class="mediew-bg__blob" style="right:-80px;top:130px;width:260px;height:260px;background:rgba(0,206,209,.16)"></div>
+      <div class="mediew-bg__blob" style="left:18%;bottom:120px;width:180px;height:180px;background:rgba(0,206,209,.08)"></div>
+      <div class="mediew-bg__blob" style="right:14%;bottom:40px;width:220px;height:220px;background:rgba(0,206,209,.1)"></div>
+      <div class="mediew-bg__vignette mediew-bg__vignette--left"></div>
+      <div class="mediew-bg__vignette mediew-bg__vignette--right"></div>
+    </div>
+
+    <section class="menu-shell app-shell">
+      <div class="menu-shell-background app-shell-background" aria-hidden="true">
+        <div class="menu-shell-glow menu-shell-glow-left"></div>
+        <div class="menu-shell-glow menu-shell-glow-right"></div>
+        <div class="menu-shell-grid-overlay"></div>
+      </div>
+
+      <div class="menu-shell-content app-shell-content">
+        <div class="page login auth">
+          <section class="card hero">
+            <img class="hero-logo" src="./logoMediew.png" alt="Logo da Mediew" />
+            <p class="eyebrow">Acesso antecipado</p>
+            <h1>Transformando estudo em hábito diário.</h1>
+            <p>
+              Missões curtas, revisão inteligente e progressão clara para manter
+              o ritmo de quem estuda na saúde.
+            </p>
+
+            <ul class="hero-highlights">
+              <li>Microlições de 5 a 10 minutos</li>
+              <li>Desafios diários com XP e recompensas</li>
+              <li>Trilha de revisão para fixar o que foi estudado</li>
+            </ul>
+
+            <div class="hero-visual">
+              <img class="hero-mascot" src="./mascote.png" alt="Mascote Mediew" />
+              <div class="hero-kpis">
+                <article class="hero-kpi">
+                  <strong>+120</strong>
+                  <span>Lições ativas</span>
+                </article>
+                <article class="hero-kpi">
+                  <strong>SRS</strong>
+                  <span>Revisão diária</span>
+                </article>
+                <article class="hero-kpi">
+                  <strong>1x/dia</strong>
+                  <span>Meta recomendada</span>
+                </article>
+                <article class="hero-kpi">
+                  <strong>Beta 2026</strong>
+                  <span>Vagas limitadas</span>
+                </article>
+              </div>
+            </div>
+
+            <div class="launch-box">
+              <span class="pill">Lote inicial</span>
+              <p class="launch-price">Garanta seu acesso antecipado por <strong>R$ 24,90</strong>.</p>
+              <p class="helper">Entrando na lista, você recebe prioridade no convite de abertura.</p>
+            </div>
+          </section>
+
+          <section class="card form-card" id="formCard">
+            <h2>Quero entrar na lista</h2>
+            <p class="helper">
+              Preencha seus dados para receber o convite assim que liberarmos o beta.
+            </p>
+
+            <form id="leadForm">
+              <label>
+                Nome
+                <input type="text" id="nome" placeholder="Seu nome completo" required />
+              </label>
+
+              <label>
+                E-mail
+                <input type="email" id="email" placeholder="voce@exemplo.com" required />
+              </label>
+
+              <label>
+                Curso
+                <select id="curso" required>
+                  <option value="">Selecione</option>
+                  <option>Medicina</option>
+                  <option>Enfermagem</option>
+                  <option>Odontologia</option>
+                  <option>Fisioterapia</option>
+                  <option>Farmácia</option>
+                  <option>Outro curso da saúde</option>
+                  <option>Futuro estudante</option>
+                </select>
+              </label>
+
+              <label>
+                Em qual fase você está?
+                <select id="fase" required>
+                  <option value="">Selecione</option>
+                  <option>1º-2º ano</option>
+                  <option>3º-4º ano</option>
+                  <option>5º-6º ano</option>
+                  <option>Residência / pós</option>
+                </select>
+              </label>
+
+              <button id="submitBtn" type="submit">Entrar na lista de espera</button>
+
+              <div id="success" class="status-banner status-banner--success" hidden>
+                Cadastro salvo. Você será avisado primeiro quando o beta abrir.
+              </div>
+
+              <div id="error" class="status-banner status-banner--danger" hidden>
+                Não foi possível salvar agora. Tente novamente.
+              </div>
+            </form>
+
+            <p class="footer-note">Mediew - prévia de acesso antecipado</p>
+          </section>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+  const form = document.getElementById("leadForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const success = document.getElementById("success");
+  const error = document.getElementById("error");
+  const formCard = document.getElementById("formCard");
+
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyLXvRv5OMAXSKzbxrL9M70ByD4U7nAkcf07oqLci1l6ktzKxZYptH07ASgZlgRIDj6dg/exec";
+
+  function celebrarCadastro() {
+    const cores = ["#1bacac", "#61d1d1", "#22bdbd"];
+    for (let i = 0; i < 16; i += 1) {
+      const spark = document.createElement("span");
+      spark.className = "spark";
+      spark.style.background = cores[i % cores.length];
+      spark.style.setProperty("--x", (Math.random() - 0.5) * 190 + "px");
+      spark.style.setProperty("--y", -40 - Math.random() * 140 + "px");
+      spark.style.animationDelay = Math.random() * 100 + "ms";
+      formCard.appendChild(spark);
+      spark.addEventListener("animationend", () => spark.remove());
+    }
+  }
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Salvando...";
+    success.hidden = true;
+    error.hidden = true;
+
+    const payload = {
+      nome: document.getElementById("nome").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      curso: document.getElementById("curso").value,
+      fase: document.getElementById("fase").value,
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const response = await fetch(WEB_APP_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.message || "Falha ao salvar");
+      }
+
+      form.reset();
+      celebrarCadastro();
+      success.hidden = false;
+    } catch (err) {
+      console.error(err);
+      error.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Entrar na lista de espera";
+    }
+  });
+</script>
+</body>
+</html>
