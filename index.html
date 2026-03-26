@@ -97,23 +97,6 @@
       animation: blob-float 12s ease-in-out infinite;
     }
 
-    .mediew-bg__vignette {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 180px;
-      z-index: 1;
-      background: var(--surface-2);
-    }
-
-    .mediew-bg__vignette--left {
-      left: 0;
-    }
-
-    .mediew-bg__vignette--right {
-      right: 0;
-    }
-
     .menu-shell {
       width: min(1180px, calc(100% - 32px));
       margin: 24px auto;
@@ -178,7 +161,7 @@
     }
 
     .page.login {
-      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      grid-template-columns: minmax(0, 1fr);
       align-items: start;
     }
 
@@ -208,20 +191,35 @@
       gap: 18px;
       align-content: start;
       min-height: 360px;
-      padding-right: 220px;
+      text-align: center;
+    }
+
+    .hero-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      width: fit-content;
+      justify-self: center;
     }
 
     .hero-logo {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      width: clamp(120px, 12vw, 170px);
+      width: clamp(56px, 6vw, 74px);
       height: auto;
       object-fit: contain;
       filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.26));
       opacity: 0.96;
       pointer-events: none;
       user-select: none;
+    }
+
+    .hero-brand__name {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 2vw, 1.8rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.12em;
+      text-transform: lowercase;
+      color: #ffffff;
     }
 
     .hero::after {
@@ -242,12 +240,12 @@
       font-size: clamp(2rem, 3vw, 2.7rem);
       line-height: 0.94;
       color: #ffffff;
-      max-width: 12ch;
+      margin-inline: auto;
     }
 
     .hero p {
       margin: 0;
-      max-width: 56ch;
+      margin-inline: auto;
       color: #c3d5e0;
       line-height: 1.5;
     }
@@ -258,12 +256,16 @@
       list-style: none;
       display: grid;
       gap: 8px;
+      justify-items: center;
+      max-width: 64ch;
+      margin-inline: auto;
     }
 
     .hero-highlights li {
       display: flex;
       align-items: center;
       gap: 9px;
+      justify-content: center;
       font-weight: 500;
       color: #dae7f4;
     }
@@ -280,29 +282,33 @@
 
     .hero-visual {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      gap: 22px;
+      width: min(100%, 760px);
+      margin-inline: auto;
       margin-top: auto;
     }
 
     .hero-mascot {
-      width: clamp(100px, 11vw, 136px);
+      width: clamp(138px, 13vw, 176px);
       height: auto;
       object-fit: contain;
       filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.32));
+      flex: 0 0 auto;
     }
 
     .hero-kpis {
-      flex: 1;
-      min-width: 180px;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 560px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      gap: 10px;
     }
 
     .hero-kpi {
-      padding: 9px 10px;
+      padding: 8px 10px;
       border-radius: 14px;
       border: 1px solid var(--card-border);
       background: var(--surface-2);
@@ -323,12 +329,18 @@
     }
 
     .launch-box {
-      border-radius: 16px;
-      border: 1px solid var(--info-border);
-      background: var(--info-surface);
-      padding: 12px;
       display: grid;
-      gap: 6px;
+      gap: 8px;
+      justify-items: center;
+      text-align: center;
+      padding: 16px 20px;
+      width: min(100%, 760px);
+      margin-inline: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 220, 220, 0.28);
+      background: linear-gradient(135deg, rgba(0, 212, 212, 0.11), rgba(0, 100, 180, 0.1));
+      position: relative;
+      overflow: hidden;
     }
 
     .pill {
@@ -345,6 +357,7 @@
       color: #e8f5ff;
       border: 1px solid var(--info-border);
       background: var(--info-surface);
+      justify-self: center;
     }
 
     .launch-price {
@@ -487,26 +500,97 @@
       color: #9ec4d4;
     }
 
+    .screens-card {
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+    }
+
+    .screens-head {
+      display: grid;
+      gap: 8px;
+      max-width: 72ch;
+    }
+
+    .screens-head h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 2.3vw, 1.9rem);
+      line-height: 1.06;
+      color: #ffffff;
+    }
+
+    .screens-head p {
+      margin: 0;
+      color: #c3d5e0;
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .screen-shot {
+      margin: 0;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface-2);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
+    }
+
+    .screen-shot img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .screen-shot figcaption {
+      padding: 10px 12px;
+      font-size: 0.83rem;
+      color: #d7ecff;
+      border-top: 1px solid var(--card-border);
+    }
+
     @media (max-width: 920px) {
       .page.login {
         grid-template-columns: minmax(0, 1fr);
       }
 
-      .hero {
-        padding-right: 28px;
+      .hero-logo {
+        width: clamp(48px, 13vw, 62px);
       }
 
-      .hero-logo {
-        position: static;
-        width: clamp(108px, 28vw, 142px);
+      .hero-brand {
+        gap: 8px;
+      }
+
+      .hero-brand__name {
+        font-size: clamp(1.2rem, 4.5vw, 1.5rem);
       }
 
       .hero-kpis {
         grid-template-columns: minmax(0, 1fr);
       }
 
+      .hero-visual {
+        flex-direction: column;
+      }
+
+      .hero-kpis {
+        width: 100%;
+        max-width: none;
+      }
+
       .menu-shell-content {
         padding: 18px;
+      }
+
+      .screens-grid {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
 
@@ -529,6 +613,10 @@
       }
 
       .form-card {
+        padding: 14px;
+      }
+
+      .screens-card {
         padding: 14px;
       }
     }
@@ -563,8 +651,6 @@
       <div class="mediew-bg__blob" style="right:-80px;top:130px;width:260px;height:260px;background:rgba(0,206,209,.16)"></div>
       <div class="mediew-bg__blob" style="left:18%;bottom:120px;width:180px;height:180px;background:rgba(0,206,209,.08)"></div>
       <div class="mediew-bg__blob" style="right:14%;bottom:40px;width:220px;height:220px;background:rgba(0,206,209,.1)"></div>
-      <div class="mediew-bg__vignette mediew-bg__vignette--left"></div>
-      <div class="mediew-bg__vignette mediew-bg__vignette--right"></div>
     </div>
 
     <section class="menu-shell app-shell">
@@ -577,7 +663,10 @@
       <div class="menu-shell-content app-shell-content">
         <div class="page login auth">
           <section class="card hero">
-            <img class="hero-logo" src="./logoMediew.png" alt="Logo da Mediew" />
+            <div class="hero-brand" aria-label="Mediew">
+              <img class="hero-logo" src="./logoMediew.png" alt="" aria-hidden="true" />
+              <span class="hero-brand__name">mediew</span>
+            </div>
             <p class="eyebrow">Acesso antecipado</p>
             <h1>Transformando estudo em hábito diário.</h1>
             <p>
@@ -617,6 +706,32 @@
               <span class="pill">Lote inicial</span>
               <p class="launch-price">Garanta seu acesso antecipado por <strong>R$ 24,90</strong>.</p>
               <p class="helper">Entrando na lista, você recebe prioridade no convite de abertura.</p>
+            </div>
+          </section>
+
+          <section class="card screens-card" aria-labelledby="screens-title">
+            <div class="screens-head">
+              <p class="eyebrow">Prévia do sistema</p>
+              <h2 id="screens-title">Algumas telas do Mediew</h2>
+            </div>
+
+            <div class="screens-grid">
+              <figure class="screen-shot">
+                <img src="./mediew.png" alt="Tela do sistema Mediew 1" loading="lazy" />
+                <figcaption>Visão geral do app</figcaption>
+              </figure>
+              <figure class="screen-shot">
+                <img src="./mediew2.png" alt="Tela do sistema Mediew 2" loading="lazy" />
+                <figcaption>Fluxo de estudos</figcaption>
+              </figure>
+              <figure class="screen-shot">
+                <img src="./mediew3.png" alt="Tela do sistema Mediew 3" loading="lazy" />
+                <figcaption>Revisão diária</figcaption>
+              </figure>
+              <figure class="screen-shot">
+                <img src="./mediew4.png" alt="Tela do sistema Mediew 4" loading="lazy" />
+                <figcaption>Acompanhamento de progresso</figcaption>
+              </figure>
             </div>
           </section>
 
